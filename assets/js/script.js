@@ -2,6 +2,7 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 var taskIdCounter = 0;
+var pageContentEl = document.querySelector("#page-content");
 
 // fucntion to get task name and type, objectify and pass along
 var taskFormHandler = function(event) {
@@ -94,10 +95,52 @@ var createTaskActions = function(taskId) {
 
         statusSelectEl.appendChild(statusOptionEl);
     }
-    
 
     return actionContainerEl;
 };
 
+// function to handle edit and delete buttons
+var taskButtonHandler = function(event) {
+    //get clicked button
+    var targetEl = event.target
+    // delete button find and run function
+    if (targetEl.matches(".delete-btn")) {
+        var taskId = targetEl.getAttribute("data-task-id");
+        deleteTask(taskId);
+    }
+    //edit button find and run function
+    else if (targetEl.matches(".edit-btn")) {
+        var taskId = targetEl.getAttribute("data-task-id");
+        editTask(taskId);
+    }
+};
 
+// delete button function to run when clicked
+var deleteTask = function(taskId) {
+    var taskSelected = document.querySelector(`.task-item[data-task-id="${taskId}"]`);
+    taskSelected.remove();
+};
+
+//edit button function to run when clicked
+var editTask = function(taskId) {
+    // getting task list item we want to edit
+    var taskSelected = document.querySelector(`.task-item[data-task-id="${taskId}"]`);
+
+    //getting content from task name and type
+    var taskName = taskSelected.querySelector("h3.task-name").textContent;
+    var taskType = taskSelected.querySelector("span.task-type").textContent;
+    //changing name input field and type selector to current task to edit
+    document.querySelector("input[name='task-name']").value = taskName;
+    document.querySelector("select[name='task-type']").value = taskType;
+    //changing submit button to say "Save Task"
+    document.querySelector("#save-task").textContent = "Save Task";
+    
+    formEl.setAttribute("data-task-id", taskId);
+};
+
+
+//task button click handler
+pageContentEl.addEventListener("click", taskButtonHandler);
+
+//submitting task click handler
 formEl.addEventListener("submit", taskFormHandler);
