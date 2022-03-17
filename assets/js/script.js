@@ -68,6 +68,9 @@ var createTaskEl = function(taskDataObj) {
         //adding the task data object to the tasks array
         tasks.push(taskDataObj);
 
+        //save tasks array to local storage
+        saveTasks();
+
         // increase task ID counter for new ID next time
         taskIdCounter++;
 };
@@ -149,6 +152,9 @@ var deleteTask = function(taskId) {
     }
     //reassign task object array to be new updated task object array without task being deleted
     tasks = updatedTaskAr;
+
+    //save tasks array to local storage
+    saveTasks();
 };
 
 //edit button function to run when clicked
@@ -185,7 +191,8 @@ var completeEditTask = function(taskName, taskType, taskId) {
         }
     };
 
-
+    //save tasks array to local storage
+    saveTasks();
     //telling user we updated the task
     alert("Task Updated!");
     //reset button and remove data-task-id from form
@@ -221,7 +228,14 @@ var taskStatusChangeHandler = function(event) {
         tasks[i].status = statusValue;
     }
   }
+  //save tasks array to local storage 
+  saveTasks();
 };
+
+//function to save "tasks" object array whenever data is changed
+var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 //form change handler for dropdown menu when changing task status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
